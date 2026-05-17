@@ -35,7 +35,7 @@ Ensure you have **Node.js** (v18.x or higher) installed on your local machine.
 ```bash
 git clone https://github.com/Alozie-Miracle/Whazzonline.git
 cd Whazzonline/frontend
-
+```
 
 2. Install the dependencies using your preferred package manager:
 ```bash
