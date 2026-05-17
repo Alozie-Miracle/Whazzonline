@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+> ⚠️ **Important:** Never commit your `.env.local` file to version control. It is already included in the `.gitignore` to prevent sensitive data leaks.
 
-## Getting Started
+---
 
-First, run the development server:
+## Known Limitations
 
+*   **Initial Build Setup:** Some components are currently mocked or structured as templates awaiting full backend API integration.
+*   **Hydration Warnings:** Minor font/style layout shifts may occur temporarily during dev mode due to browser extensions interfering with server-rendered HTML.
+*   **State Management:** Complex global state operations are restricted to localized React hooks until an architecture-wide providerHere is a clean, production-ready `README.md` for **Whazzonline**. It replaces the generic boilerplate with the specific details requested, structured for clear readability.
+
+***
+
+# Whazzonline
+
+## Overview
+Whazzonline is a modern web application built to deliver a fast, responsive, and dynamic user experience. Bootstrapped with `create-next-app`, this repository houses the frontend architecture of the platform, leveraging server-side rendering and static site generation for optimal performance.
+
+---
+
+## Tech Stack
+*   **Framework:** Next.js (App Router)
+*   **Language:** TypeScript
+*   **Styling:** Tailwind CSS *(or update if using different styling tool)*
+*   **Font Optimization:** `next/font` (Geist Sans & Geist Mono)
+
+---
+
+## Getting Started & Local Setup
+
+### Prerequisites
+Ensure you have **Node.js** (v18.x or higher) installed on your local machine.
+
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone [https://github.com/Alozie-Miracle/Whazzonline.git](https://github.com/Alozie-Miracle/Whazzonline.git)
+   cd Whazzonline/frontend
+
+
+2. Install the dependencies using your preferred package manager:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+    npm run dev
+    # or
+    yarn dev
+    # or
+    pnpm dev
+    # or
+    bun dev
+
+Open http://localhost:3000 in your browser to view the application. You can begin editing the codebase by modifying app/page.tsx.
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Environment Variables
+The application requires configuration variables to communicate with backend services and external APIs.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Create a .env.local file in the root of the frontend directory:
+```bash
+    touch .env.local
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Add the following required environment variables:
+NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+# NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
