@@ -32,32 +32,31 @@ Ensure you have **Node.js** (v18.x or higher) installed on your local machine.
 
 ### Installation
 1. Clone the repository:
-   ```bash
-   git clone [https://github.com/Alozie-Miracle/Whazzonline.git](https://github.com/Alozie-Miracle/Whazzonline.git)
-   cd Whazzonline/frontend
+```bash
+git clone https://github.com/Alozie-Miracle/Whazzonline.git
+cd Whazzonline/frontend
 
 
 2. Install the dependencies using your preferred package manager:
 ```bash
-    npm run dev
-    # or
-    yarn dev
-    # or
-    pnpm dev
-    # or
-    bun dev
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
 Open http://localhost:3000 in your browser to view the application. You can begin editing the codebase by modifying app/page.tsx.
-```
 
 ## Environment Variables
 The application requires configuration variables to communicate with backend services and external APIs.
 
 1. Create a .env.local file in the root of the frontend directory:
 ```bash
-    touch .env.local
+touch .env.local
 ```
 
 2. Add the following required environment variables:
 NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
-# NEXT_PUBLIC_ANALYTICS_ID=your_analytics_id
