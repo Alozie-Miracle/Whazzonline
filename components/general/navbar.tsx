@@ -134,12 +134,13 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
                     <div className={`relative w-8 h-8 rounded-full overflow-hidden border ${
                       isDark ? 'border-[#333333]' : 'border-[#E5E5E1]'
                     }`}>
-                      <Image 
+
+                      <Image
                         src={profile.photoURL} 
-                        alt="Avatar" 
-                        fill
-                        sizes="32px"
-                        className="object-cover"
+                        alt="Avatar"
+                        width={32}
+                        height={32}
+                        unoptimized // <-- Add this flag here
                       />
                     </div>
                   ) : (
@@ -188,10 +189,10 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
               isDark ? 'bg-[#121212] border-[#333333]' : 'bg-[#FAF9F6] border-[#E5E5E1]'
             }`}
           >
-            <div className="px-6 py-10 flex flex-col justify-between h-full max-w-md mx-auto">
-              <div className="space-y-8">
+            <div className="px-3 py-10 flex flex-col justify-between h-full max-w-md mx-auto">
+              <div className="space-y-5">
                 <p className="text-[10px] font-mono tracking-widest text-gray-400 uppercase">Navigation</p>
-                <Link href="/" onClick={() => setIsMenuOpen(false)} className={`block text-lg font-bold uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
+                <Link href="/" onClick={() => setIsMenuOpen(false)} className={`block text-sm  uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
                   isDark ? 'text-white' : 'text-[#1A1A1A]'
                 }`}>
                   Collections
@@ -199,19 +200,19 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
                 
                 {user ? (
                   <>
-                    <Link href="/wishlist" onClick={() => setIsMenuOpen(false)} className={`block text-lg font-bold uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
+                    <Link href="/wishlist" onClick={() => setIsMenuOpen(false)} className={`block text-sm uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
                       isDark ? 'text-white' : 'text-[#1A1A1A]'
                     }`}>
                       Wishlist
                     </Link>
-                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className={`block text-lg font-bold uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
+                    <Link href="/dashboard" onClick={() => setIsMenuOpen(false)} className={`block text-sm  uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
                       isDark ? 'text-white' : 'text-[#1A1A1A]'
                     }`}>
                       Dashboard
                     </Link>
                   </>
                 ) : (
-                  <Link href="/auth" onClick={() => setIsMenuOpen(false)} className={`block text-lg font-bold uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
+                  <Link href="/auth" onClick={() => setIsMenuOpen(false)} className={`block text-sm  uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
                     isDark ? 'text-white' : 'text-[#1A1A1A]'
                   }`}>
                     Sign In / Register
@@ -219,7 +220,7 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
                 )}
 
                 {profile?.email === 'miracleoliver8@gmail.com' && (
-                  <Link href="/admin" onClick={() => setIsMenuOpen(false)} className={`block text-lg font-bold uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
+                  <Link href="/admin" onClick={() => setIsMenuOpen(false)} className={`block text-sm  uppercase tracking-[0.15em] hover:opacity-60 transition-all ${
                     isDark ? 'text-white' : 'text-[#1A1A1A]'
                   }`}>
                     Admin Panel
@@ -231,7 +232,7 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
               <div className={`pt-6 border-t space-y-6 ${isDark ? 'border-[#333333]' : 'border-[#E5E5E1]'}`}>
                 <button 
                   onClick={() => { toggleTheme(); }}
-                  className={`flex items-center justify-between w-full text-xs font-bold uppercase tracking-[0.2em] py-2 transition-all ${
+                  className={`flex items-center justify-between w-full text-xs uppercase tracking-[0.2em] py-2 transition-all ${
                     isDark ? 'text-white' : 'text-[#1A1A1A]'
                   }`}
                 >

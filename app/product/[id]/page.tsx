@@ -11,7 +11,8 @@ const page = () => {
   return (
     <div className={`${
         isDark ? "bg-[#121212]" : "bg-[#FAF9F6]"
-      } min-h-screen transition-colors duration-500`}>
+      } min-h-screen transition-colors duration-500`}
+    >
 
         <div className='w-full min-h-screen max-w-7xl mx-auto'>
             <ProductDetails />

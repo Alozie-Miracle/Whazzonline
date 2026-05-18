@@ -1,9 +1,10 @@
+import Auth from '@/components/auth'
 import React from 'react'
 
 const page = () => {
   return (
-    <div>
-      
+    <div className='w-full min-h-screen'>
+      <Auth />
     </div>
   )
 }
