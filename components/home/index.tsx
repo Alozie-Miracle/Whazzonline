@@ -32,13 +32,13 @@ const Index = () => {
   };
 
   return (
-    <div className="space-y-24 pt-5 pb-32 transition-colors duration-500">
+    <div className="space-y-24 lg:pt-5  pb-32 transition-colors duration-500">
       {/* Hero Section Card Node */}
-      <section className={`relative h-150 rounded-[3rem] overflow-hidden border transition-colors duration-500 ${
+      <section className={`relative h-150 lg:rounded-[3rem] overflow-hidden border transition-colors duration-500 ${
         isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-white border-[#E5E5E1]'
       }`}>
-        <div className="absolute inset-0 grid grid-cols-1 lg:grid-cols-2">
-          <div className="relative p-12 flex flex-col justify-center">
+        <div className="absolute inset-0 flex flex-col-reverse lg:flex-row">
+          <div className="relative p-5 lg:p-12 flex flex-col justify-center shrink-0 md:w-[40%]">
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -87,7 +87,7 @@ const Index = () => {
           </div>
           
           {/* Layout-Optimized Media Wrapper Node */}
-          <div className={`relative hidden lg:block border-l overflow-hidden ${
+          <div className={`relative block border-l overflow-hidden shrink-0 flex-1 ${
             isDark ? 'bg-[#121212] border-[#333333]' : 'bg-[#EEEDEA] border-[#E5E5E1]'
           }`}>
             <Image 
@@ -105,7 +105,7 @@ const Index = () => {
       </section>
 
       {/* Grid Layout Chassis with Functional Sidebar Filters */}
-      <div className="flex flex-col lg:flex-row gap-16">
+      <div className="flex flex-col lg:flex-row gap-16 px-3">
         <aside className="w-full lg:w-48 shrink-0">
           <div className="sticky top-24 space-y-12">
             <div>

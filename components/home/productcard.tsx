@@ -36,7 +36,7 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
       onClick={() => onViewDetails(product.id)}
     >
       {/* Optimized Media Matrix Wrapper */}
-      <div className={`relative aspect-4/5 mb-4 overflow-hidden border transition-colors duration-500 rounded-t-2xl ${
+      <div className={`relative aspect-4/5 mb-4 overflow-hidden border transition-colors duration-500 rounded-2xl ${
         isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-[#EEEDEA] border-[#E5E5E1]'
       }`}>
         <Image 
