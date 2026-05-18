@@ -122,7 +122,7 @@ const Index = () => {
                     className={`text-sm font-light text-left transition-all cursor-pointer ${
                       filter === cat 
                         ? `font-bold italic border-b w-fit ${isDark ? 'text-white border-white' : 'text-[#1A1A1A] border-[#1A1A1A]'}` 
-                        : 'text-gray-400 hover:text-[#1A1A1A] '
+                        : 'text-gray-400 hover:text-yellow-600 '
                     }`}
                   >
                     {cat}

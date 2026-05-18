@@ -37,14 +37,6 @@ export interface UserProfile {
   createdAt: number;
 }
 
-export interface OrderItem {
-  productId: string;
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl: string;
-}
-
 export interface Order {
   id: string;
   userId: string;
@@ -52,6 +44,16 @@ export interface Order {
   totalAmount: number;
   status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
   createdAt: number;
+}
+
+// Inferred from dashboard usage: matches the items nested in your Order structure
+export interface OrderItem {
+  id: string;
+  name: string;
+  price: number;
+  quantity: number;
+  imageUrl: string;
+  category: string;
 }
 
 export interface WishlistItem {
