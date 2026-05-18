@@ -43,6 +43,7 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
           src={product.imageUrl} 
           alt={product.name} 
           fill
+          loading='lazy'
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
           className={`object-cover transition-all duration-700 grayscale-[0.2] group-hover:grayscale-0 group-hover:scale-105 ${
             isDark ? 'opacity-80' : 'opacity-100'

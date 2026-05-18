@@ -41,7 +41,7 @@ export const MOCK_PRODUCTS: Product[] = [
     name: 'Tech Backpack G2',
     description: 'Water-resistant backpack with a dedicated laptop compartment and USB charging port.',
     price: 89.99,
-    imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb94c6a62?q=80&w=1000&auto=format&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?q=80&w=1000&auto=format&fit=crop',
     category: 'Lifestyle',
     stock: 25,
     rating: 4.7,

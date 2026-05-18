@@ -15,6 +15,15 @@ export interface Product {
   reviewsCount?: number;
 }
 
+export interface WishlistState {
+  wishlistItems: Product[];
+  addItemToWishlist: (product: Product) => void;
+  removeItemFromWishlist: (id: string) => void;
+  toggleWishlist: (id: string) => void;
+  isInWishlist: (id: string) => boolean;
+  clearWishlist: () => void;
+}
+
 export interface CartItem {
   productId: string;
   quantity: number;

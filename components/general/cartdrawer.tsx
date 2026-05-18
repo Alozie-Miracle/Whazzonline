@@ -217,7 +217,7 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
                 
                 <button 
                   onClick={handleCheckout}
-                  className={`w-full py-4 text-[10px] font-bold uppercase tracking-[0.2em] transition-all hover:bg-opacity-90 ${
+                  className={`w-full py-4 text-[10px] cursor-pointer rounded-xl hover:scale-105 duration-300 ease-in-out active:scale-95 font-bold uppercase tracking-[0.2em] transition-all hover:bg-opacity-90 ${
                     isDark 
                       ? 'bg-white text-[#1A1A1A]' 
                       : 'bg-[#1A1A1A] text-white'
