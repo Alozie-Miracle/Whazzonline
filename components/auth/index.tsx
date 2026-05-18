@@ -23,6 +23,8 @@ export default function Auth() {
   const theme = useThemeStore((state) => state.theme);
     const isDark = theme === 'dark';
 
+    const redirectPath = new URLSearchParams(window.location.search).get('redirect') || '/';
+
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -40,6 +42,10 @@ export default function Auth() {
         };
         setAuth(mockUser);
         setIsLoading(false);
+        if (redirectPath) {
+          router.push(redirectPath);
+          return;
+        }
         router.push('/');
       } catch (err: any) {
         setError('Authentication simulation failed');
@@ -60,6 +66,11 @@ export default function Auth() {
       };
       setAuth(mockUser);
       setIsLoading(false);
+
+      if (redirectPath) {
+        router.push(redirectPath);
+        return;
+      }
       router.push('/');
     }, 1000);
   };

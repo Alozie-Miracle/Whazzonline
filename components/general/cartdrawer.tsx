@@ -9,6 +9,7 @@ import { useCartStore } from '@/store/cartstore';
 import { useThemeStore } from "@/store/themestore"; 
 import { MOCK_PRODUCTS } from '@/lib/constant';
 import { Product } from '@/types';
+import { useAuthStore } from '@/store/authstore';
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -23,6 +24,7 @@ type CartProduct = Product & {
 export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
   const { items, removeItem, updateQuantity, totalItems } = useCartStore();
   const theme = useThemeStore((state) => state.theme);
+  const { user } = useAuthStore()
   const router = useRouter();
 
   const isDark = theme === 'dark';
@@ -51,7 +53,12 @@ export const CartDrawer: React.FC<CartDrawerProps> = ({ isOpen, onClose }) => {
 
   const handleCheckout = () => {
     onClose();
-    router.push('/checkout');
+    
+    if (user) {
+      router.push('/dashboard/checkout');
+    } else {
+      router.push('/auth?redirect=/dashboard/checkout');
+    }
   };
 
   return (
