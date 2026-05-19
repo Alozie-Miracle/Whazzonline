@@ -165,6 +165,36 @@ export const useProducts = () => {
         }
     }, [token, router, clearError, fetchWishlistProducts]);
 
+    const checkout = useCallback(async (onSuccess?: (orderData: any) => void, address: { fullName: string; email: string, street: string, city: string, zip: string, country: string } = { fullName: '', email: '', street: '', city: '', zip: '', country: 'USA' }) => {
+        
+        setError(null);
+        try {
+        // Calls your POST /checkout route
+            const response = await axiosClient.post('/products/checkout', { 
+                name: address.fullName,
+                email: address.email,
+                address: address.street,
+                city: address.city,
+                postalCode: address.zip,
+                country: address.country
+            }); 
+        
+            if (response.status === 201) {
+                // Run optional callback parameters (e.g., redirecting to an order success screen)
+                if (onSuccess) {
+                    onSuccess(response.data.order);
+                }
+            }
+        } catch (err: any) {
+            console.error("Transaction processing error:", err);
+            const errorMessage = err.response?.data?.message || "Server error processing your checkout";
+            setError(errorMessage);
+            throw new Error(errorMessage); // Allows catching the error inside the UI component if needed
+        } finally {
+            
+        }
+    }, []);
+
     // // Isolation Effect: Triggers calls cleanly only when token lifecycle changes state
     // useEffect(() => {
     //     if (token) {
@@ -186,6 +216,7 @@ export const useProducts = () => {
         fetchCartProducts,
         fetchWishlistProducts,
         addProductToCart,
-        toggleWishlistProduct
+        toggleWishlistProduct,
+        checkout
     };
 };
