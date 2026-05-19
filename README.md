@@ -59,4 +59,4 @@ touch .env.local
 ```
 
 2. Add the following required environment variables:
-NEXT_PUBLIC_API_URL=http://localhost:5000/api/v1
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
