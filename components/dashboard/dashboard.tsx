@@ -4,10 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { useAuthStore } from '@/store/authstore';
-import { useWishlistStore } from '@/store/wishliststore'
-import { Product } from '@/types';
+
 import { motion } from 'framer-motion';
-import { MOCK_ORDERS_LIST, MOCK_PRODUCTS } from '@/lib/constant';
+
 import { Package, Heart, User as UserIcon } from 'lucide-react';
 import { useThemeStore } from '@/store/themestore';
 import Profile from './profile';
