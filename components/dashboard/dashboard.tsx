@@ -12,28 +12,39 @@ import { Package, Heart, User as UserIcon } from 'lucide-react';
 import { useThemeStore } from '@/store/themestore';
 import Profile from './profile';
 import DashboardWaitlist from './dashboardwaitlist';
+import { useProducts } from '@/hooks/useProduct';
 
 const Dashboard = () => {
   const theme = useThemeStore((state) => state.theme);
   const isDark = theme === 'dark';
-  const orders = MOCK_ORDERS_LIST;
 
   const { user, profile } = useAuthStore();
   const router = useRouter();
-  const { wishlistItems } = useWishlistStore();
   
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'orders' | 'wishlist' | 'profile'>('orders');
   const [orderPage, setOrderPage] = useState(1);
+
+  const { fetchUserOrders, loading: userOrdersLoading, orders, wishlist, fetchWishlistProducts } = useProducts();
   
+  useEffect(() => {
+    const initializeDashboard = async () => {
+      if (!user) {
+        router.push('/auth');
+        return;
+      }
+
+      await fetchUserOrders();
+      await fetchWishlistProducts();
+    };
+
+    initializeDashboard();
+  }, [fetchUserOrders, fetchWishlistProducts]);
+
   const ordersPerPage = 2;
   const totalOrderPages = Math.ceil(orders.length / ordersPerPage);
   const paginatedOrders = orders.slice((orderPage - 1) * ordersPerPage, orderPage * ordersPerPage);
 
-  const enrichedWishlist = wishlistItems.map(item => {
-    const product = MOCK_PRODUCTS.find(p => p.id === item.id);
-    return product ? product: null;
-  }).filter(Boolean) as (Product & { addedAt: number })[];
 
   useEffect(() => {
     if (!user) {
@@ -43,7 +54,7 @@ const Dashboard = () => {
     setLoading(false);
   }, [user, router]);
 
-  if (loading) {
+  if (userOrdersLoading) {
     return (
       <div className={`w-full min-h-screen flex items-center justify-center transition-colors duration-500 ${isDark ? "bg-[#121212] text-white" : "bg-[#FAF9F6] text-black"}`}>
         <div className="text-[10px] font-bold uppercase tracking-[0.4em] animate-pulse">Initializing Dashboard...</div>
@@ -74,7 +85,7 @@ const Dashboard = () => {
               onClick={() => setActiveTab('wishlist')}
               className={`pb-2 border-b-2 transition-all cursor-pointer ${activeTab === 'wishlist' ? (isDark ? 'border-white text-white' : 'border-[#1A1A1A] text-black') : 'border-transparent opacity-40'}`}
             >
-              Aspirations ({enrichedWishlist.length})
+              Aspirations ({wishlist?.products.length})
             </button>
             <button 
               onClick={() => setActiveTab('profile')}
@@ -96,10 +107,10 @@ const Dashboard = () => {
               {paginatedOrders.length > 0 ? (
                 <>
                   {paginatedOrders.map((order) => (
-                    <div key={order.id} className={`border p-8 md:p-12 transition-colors group rounded-2xl ${isDark ? 'border-[#2c2b2b] hover:border-white' : 'border-[#E5E5E1] hover:border-[#1A1A1A]'}`}>
+                    <div key={order._id} className={`border p-8 md:p-12 transition-colors group rounded-2xl ${isDark ? 'border-[#2c2b2b] hover:border-white' : 'border-[#E5E5E1] hover:border-[#1A1A1A]'}`}>
                       <div className="flex flex-col md:flex-row justify-between mb-12 gap-6">
                         <div className="space-y-2">
-                          <div className={`text-[10px] font-mono uppercase transition-colors ${isDark ? 'text-white/40' : 'text-black/40'}`}>ORD_REF: {order.id.substring(0, 12).toUpperCase()}</div>
+                          <div className={`text-[10px] font-mono uppercase transition-colors ${isDark ? 'text-white/40' : 'text-black/40'}`}>ORD_REF: {order._id.toUpperCase()}</div>
                           <div className={`text-xs font-bold uppercase tracking-widest transition-colors ${isDark ? 'text-white' : 'text-black'}`}>Status: {order.status}</div>
                         </div>
                         <div className="text-left md:text-right">
@@ -110,17 +121,17 @@ const Dashboard = () => {
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                         {order.items.map((item, idx) => (
                           <div key={idx} className="space-y-4">
-                            <div className={`aspect-4/5 overflow-hidden grayscale-[0.2] transition-all group-hover:grayscale-0 relative border ${isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-[#EEEDEA] border-[#E5E5E1]'}`}>
+                            <div className={`aspect-4/5 overflow-hidden grayscale-[0.2] transition-all rounded-xl group-hover:grayscale-0 relative border ${isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-[#EEEDEA] border-[#E5E5E1]'}`}>
                               <Image 
-                                src={item.imageUrl} 
-                                alt={item.name} 
+                                src={item.product.imageUrl} 
+                                alt={item.product.name} 
                                 fill 
                                 sizes="(max-w-768px) 100vw, 25vw"
                                 className={`object-cover ${isDark ? 'opacity-80' : ''}`} 
                               />
                             </div>
                             <div>
-                              <h4 className={`text-[11px] font-bold uppercase truncate transition-colors ${isDark ? 'text-white' : 'text-black'}`}>{item.name}</h4>
+                              <h4 className={`text-[11px] font-bold uppercase truncate transition-colors ${isDark ? 'text-white' : 'text-black'}`}>{item.product.name}</h4>
                               <p className={`text-[10px] font-mono uppercase transition-colors ${isDark ? 'text-white/40' : 'text-black/40'}`}>QTY: {item.quantity}</p>
                             </div>
                           </div>
@@ -168,7 +179,7 @@ const Dashboard = () => {
           )}
 
           {activeTab === 'wishlist' && (
-            <DashboardWaitlist enrichedWishlist={enrichedWishlist} isDark={isDark} router={router} />
+            <DashboardWaitlist enrichedWishlist={wishlist?.products || []} isDark={isDark} router={router} />
           )}
 
           {activeTab === 'profile' && (

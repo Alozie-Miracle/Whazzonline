@@ -7,7 +7,9 @@ import {
     SingleProductResponse, 
     CartResponse, 
     WishlistResponse, 
-    WaitList
+    WaitList,
+    OrdersResponse,
+    Order
 } from '../types/';
 import { useCartStore } from '@/store/cartstore';
 import { useAuthStore } from '@/store/authstore';
@@ -21,6 +23,7 @@ export const useProducts = () => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [wishlist, setWishlist] = useState<WaitList>();
     const [product, setProduct] = useState<Product | null>(null);
+    const [orders, setOrders] = useState<Order[]>([]);
 
     const clearError = useCallback(() => setError(null), []);
     const setCart = useCartStore((state) => state.setCart); // Select specific store actions to avoid global re-binds
@@ -195,6 +198,31 @@ export const useProducts = () => {
         }
     }, []);
 
+
+    
+
+    const fetchUserOrders = useCallback(async (): Promise<OrdersResponse> => {
+        setLoading(true);
+        setError(null);
+        try {
+            const response = await axiosClient.get('/products/my-orders');
+            if (response.data.success) {
+                setOrders(response.data.orders);
+            }
+            // Return the valid response object payload data
+            return response.data;
+        } catch (err: any) {
+            console.error("Error fetching order index updates:", err);
+            const errMsg = err.response?.data?.message || "Failed to load order history archives";
+            setError(errMsg);
+            
+            // Return a structural fallback matching your OrdersResponse model structure
+            return { success: false, count: 0, orders: [] };
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
     // // Isolation Effect: Triggers calls cleanly only when token lifecycle changes state
     // useEffect(() => {
     //     if (token) {
@@ -217,6 +245,8 @@ export const useProducts = () => {
         fetchWishlistProducts,
         addProductToCart,
         toggleWishlistProduct,
-        checkout
+        checkout,
+        fetchUserOrders,
+        orders
     };
 };

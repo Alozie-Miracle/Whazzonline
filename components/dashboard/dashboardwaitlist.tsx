@@ -1,3 +1,4 @@
+import { Product } from '@/types';
 import { Heart } from 'lucide-react'
 import Image from 'next/image'
 
@@ -5,13 +6,7 @@ import Image from 'next/image'
 type Props = {
     isDark: boolean;
     router: any;
-    enrichedWishlist: {
-        id: string;
-        imageUrl: string;
-        name: string;
-        category: string;
-        price: number;
-    }[];
+    enrichedWishlist: Product[]
 };
 
 const DashboardWaitlist = ({ enrichedWishlist, isDark, router }: Props) => {
@@ -20,9 +15,9 @@ const DashboardWaitlist = ({ enrichedWishlist, isDark, router }: Props) => {
         {enrichedWishlist.length > 0 ? (
         enrichedWishlist.map((item) => (
             <div 
-            key={item.id} 
+            key={item._id} 
             className="group cursor-pointer"
-            onClick={() => router.push(`/product/${item.id}`)}
+            onClick={() => router.push(`/product/${item._id}`)}
             >
             <div className={`aspect-4/5 mb-6 overflow-hidden relative border transition-colors rounded-xl ${isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-[#EEEDEA] border-[#E5E5E1]'}`}>
                 <Image

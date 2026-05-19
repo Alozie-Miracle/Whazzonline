@@ -41,16 +41,7 @@ const Profile = ({ profile, isDark, user }: Props) => {
                 </div>
             </div>
             
-            <div className={`pt-12 border-t transition-colors ${isDark ? 'border-[#333333]' : 'border-[#E5E5E1]'}`}>
-                <h3 className={`text-[10px] font-bold uppercase tracking-widest mb-6 transition-colors ${isDark ? 'text-white/60' : 'text-black/40'}`}>Security Settings</h3>
-                <button className={`text-[10px] font-bold border px-6 py-3 uppercase tracking-widest transition-all ${
-                isDark 
-                    ? 'border-white text-white hover:bg-white hover:text-[#1A1A1A]' 
-                    : 'border-black text-[#1A1A1A] hover:bg-black hover:text-white'
-                }`}>
-                    Reset Access Key
-                </button>
-            </div>
+            
         </div>
     </div>
   )

@@ -35,14 +35,6 @@ export interface UserProfile {
   createdAt: number;
 }
 
-export interface Order {
-  id: string;
-  userId: string;
-  items: OrderItem[];
-  totalAmount: number;
-  status: 'pending' | 'paid' | 'shipped' | 'delivered' | 'cancelled';
-  createdAt: number;
-}
 
 // Inferred from dashboard usage: matches the items nested in your Order structure
 export interface OrderItem {
@@ -103,4 +95,37 @@ export interface WaitList {
   _id?: string;
   user: string;
   products: Product[]; 
+}
+
+
+export type OrderStatus = 'processing' | 'shipped' | 'delivered' | 'cancelled';
+
+export interface OrderItem {
+  _id?: string;
+  product: Product; // Fully hydrated product model populated from your backend lookup
+  quantity: number;
+  priceAtPurchase: number;
+}
+
+export interface Order {
+  _id: string;
+  user: string; // User ID reference string
+  items: OrderItem[];
+  totalAmount: number;
+  status: OrderStatus;
+  purchaseDate: string; // ISO Date String format from mongoose timestamps
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Structuring the API route response payload schema wrap
+export interface OrdersResponse {
+  success: boolean;
+  count: number;
+  orders: Order[];
+}
+
+export interface SingleOrderResponse {
+  success: boolean;
+  order: Order;
 }
