@@ -25,7 +25,11 @@ export const useAuth = () => {
     const { setToken, clearAuth, setAuth, user } = useAuthStore();
 
     const clearError = (): void => setError(null);
-    const redirectPath = new URLSearchParams(window.location.search).get('redirect') || '/';
+    let redirectPath = "/";
+    if (typeof window !== 'undefined') {
+        // Safe to use window, document, localStorage, or location here
+        redirectPath = new URLSearchParams(window.location.search).get('redirect') || '/';
+    }
     const router = useRouter();
 
     const login = async (email: string, password: string): Promise<HookActionResponse> => {
