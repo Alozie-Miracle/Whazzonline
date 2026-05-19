@@ -4,20 +4,20 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'motion/react';
-import { Star, ShieldCheck, Truck, Plus, Minus, ArrowLeft, Heart } from 'lucide-react';
+import { Star, ShieldCheck, Truck, Plus, Minus, Heart } from 'lucide-react';
 import { useCartStore } from '@/store/cartstore';
 import { useThemeStore } from "@/store/themestore";
 import { useWishlistStore } from "@/store/wishliststore";
 import { useAuthStore } from "@/store/authstore";
-import { MOCK_PRODUCTS } from '@/lib/constant';
 import { Product } from '@/types';
+import { useProducts } from '@/hooks/useProduct';
 
 export const ProductDetails: React.FC = () => {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
-  
-  const { addItem } = useCartStore();
+  const { loading, fetchProductById, fetchAllProducts, error, product, products, addProductToCart, toggleWishlistProduct, wishlist, fetchWishlistProducts } = useProducts();
+ 
   const { user } = useAuthStore();
   const theme = useThemeStore((state) => state.theme);
   const { toggleWishlist: toggleStoreWishlist, isInWishlist } = useWishlistStore();
@@ -28,45 +28,71 @@ export const ProductDetails: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Product[]>([]);
 
   const isDark = theme === 'dark';
-  const product = MOCK_PRODUCTS.find((p) => p.id === id);
-  const isWishlisted = id ? isInWishlist(id) : false;
+  const isWishlisted = product && product?._id === wishlist?.products.find((p) => p._id === product._id)?._id;
 
-    useEffect(() => {
-        if (product) {
-            // Filter out the current product being viewed
-            const remainingProducts = MOCK_PRODUCTS.filter((p) => p.id !== product.id);
 
-            // Prioritize products from the exact same category
-            let clientRecs = remainingProducts.filter((p) => p.category === product.category);
+  // Track product routing instances
+  useEffect(() => {
+    if (id) {
+      fetchProductById(id);
+      fetchAllProducts();
+      fetchWishlistProducts();
+    }
+  }, [id, fetchProductById, fetchAllProducts]);
 
-            // If there aren't enough items in the same category, fill up the remainder from other categories
-            if (clientRecs.length < 3) {
-            const fillers = remainingProducts.filter((p) => !clientRecs.includes(p));
-            clientRecs = [...clientRecs, ...fillers];
-            }
+  // Handle recommendation matrix mapping
+  useEffect(() => {
+    if (product && products.length > 0) {
+      const remainingProducts = products.filter((p) => p._id !== product._id);
+      let clientRecs = remainingProducts.filter((p) => p.category === product.category);
 
-            // Limit the results to a maximum of 3 products
-            setRecommendations(clientRecs.slice(0, 3));
-        }
-    }, [product]);
+      if (clientRecs.length < 3) {
+        const fillers = remainingProducts.filter((p) => !clientRecs.includes(p));
+        clientRecs = [...clientRecs, ...fillers];
+      }
+
+      setRecommendations(clientRecs.slice(0, 3));
+    }
+  }, [product, products]);
 
   const handleToggleWishlist = () => {
     if (!user) {
-      router.push('/auth');
+      router.push(`/auth?redirect=/product/${id}`);
       return;
     }
     if (!id) return;
+    toggleWishlistProduct(id);
     toggleStoreWishlist(id);
   };
 
+  // CONNECTED BACKEND SYSTEM MUTATION HANDLER
   const handleAddToCart = async () => {
     if (!product) return;
     setIsAdding(true);
-    await addItem(product.id, quantity);
-    setTimeout(() => setIsAdding(false), 1000);
+    try {
+      if (!user) return router.push('/auth'); 
+
+    
+      await addProductToCart(product._id, quantity);
+    } catch (err) {
+      console.error("Failed adding artifact item to cart instance:", err);
+    } finally {
+      // Brief visual completion timeout transition frame
+      setTimeout(() => setIsAdding(false), 800);
+    }
   };
 
-  if (!product) {
+  // State loading placeholder layout wrapper
+  if (loading) {
+    return (
+      <div className="h-[60vh] flex flex-col items-center justify-center text-center">
+        <div className={`w-6 h-6 border-2 rounded-full animate-spin ${isDark ? 'border-white border-t-transparent' : 'border-black border-t-transparent'}`} />
+        <p className="text-[10px] uppercase tracking-[0.3em] text-gray-400 mt-4">Decrypting Document...</p>
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="h-[60vh] flex flex-col items-center justify-center text-center">
         <h2 className={`text-2xl font-serif italic ${isDark ? 'text-white' : 'text-[#1A1A1A]'}`}>
@@ -151,12 +177,12 @@ export const ProductDetails: React.FC = () => {
               <div className="flex items-center gap-1">
                 {[...Array(5)].map((_, i) => (
                     <Star 
-                        key={i} 
-                        className={`w-3 h-3 ${
+                      key={i} 
+                      className={`w-3 h-3 ${
                         i < Math.floor(product.rating || 0) 
-                            ? (isDark ? 'fill-white text-white' : 'fill-[#1A1A1A] text-[#1A1A1A]') 
-                            : (isDark ? 'text-gray-500' : 'text-gray-200')
-                        }`} 
+                          ? (isDark ? 'fill-white text-white' : 'fill-[#1A1A1A] text-[#1A1A1A]') 
+                          : (isDark ? 'text-gray-500' : 'text-gray-200')
+                      }`} 
                     />
                 ))}
               </div>
@@ -177,14 +203,14 @@ export const ProductDetails: React.FC = () => {
               <div className={`flex items-center py-2 gap-8 border-b transition-colors ${isDark ? 'border-white text-white' : 'border-[#1A1A1A] text-[#1A1A1A]'}`}>
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="text-xs hover:opacity-50"
+                  className="text-xs hover:opacity-50 cursor-pointer"
                 >
                   <Minus className="w-3 h-3" />
                 </button>
                 <span className="text-xs font-mono font-bold w-4 text-center">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)}
-                  className="text-xs hover:opacity-50"
+                  className="text-xs hover:opacity-50 cursor-pointer"
                 >
                   <Plus className="w-3 h-3" />
                 </button>
@@ -193,7 +219,7 @@ export const ProductDetails: React.FC = () => {
               <button 
                 onClick={handleAddToCart}
                 disabled={isAdding}
-                className={`flex-grow py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-opacity-90 transition-all disabled:opacity-50 ${
+                className={`grow cursor-pointer py-5 text-[10px] font-bold uppercase tracking-[0.3em] hover:bg-opacity-90 transition-all disabled:opacity-50 ${
                   isDark ? 'bg-white text-[#1A1A1A]' : 'bg-[#1A1A1A] text-white'
                 }`}
               >
@@ -202,7 +228,7 @@ export const ProductDetails: React.FC = () => {
 
               <button 
                 onClick={handleToggleWishlist}
-                className={`p-5 border transition-all ${
+                className={`p-5 border transition-all cursor-pointer ${
                   isWishlisted 
                     ? `bg-[#1A1A1A] border-[#1A1A1A] text-white dark:bg-white dark:border-white dark:text-[#1A1A1A]` 
                     : `border-[#E5E5E1] dark:border-[#333333] hover:border-[#1A1A1A] dark:hover:border-white ${isDark ? 'text-white' : 'text-[#1A1A1A]'}`
@@ -378,10 +404,10 @@ export const ProductDetails: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
             {recommendations.map((rec) => (
               <div 
-                key={rec.id} 
+                key={rec._id} 
                 className="group cursor-pointer"
                 onClick={() => {
-                  router.push(`/product/${rec.id}`);
+                  router.push(`/product/${rec._id}`);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
               >

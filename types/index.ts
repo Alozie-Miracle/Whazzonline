@@ -1,20 +1,19 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
 
 export interface Product {
-  id: string;
+  _id: string;
   name: string;
   description: string;
   price: number;
   imageUrl: string;
   category: string;
+  countInStock: number;
   stock: number;
   rating?: number;
-  reviewsCount?: number;
+  reviewsCount?: number
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
 }
-
 export interface WishlistState {
   wishlistItems: Product[];
   addItemToWishlist: (product: Product) => void;
@@ -24,15 +23,14 @@ export interface WishlistState {
   clearWishlist: () => void;
 }
 
-export interface CartItem {
-  productId: string;
-  quantity: number;
-}
+
 
 export interface UserProfile {
   id: string;
   email: string;
   displayName: string;
+  role: 'user' | 'admin';
+  isVerified: boolean;
   photoURL: string;
   createdAt: number;
 }
@@ -59,4 +57,50 @@ export interface OrderItem {
 export interface WishlistItem {
   productId: string;
   addedAt: number;
+}
+
+
+
+
+export interface CartItem {
+  _id: string;
+  product: Product;
+  quantity: number;
+}
+
+export interface CartResponse {
+    success: boolean;
+    cart: {
+        _id: string;
+        user: string;
+        items: CartItem[];
+    };
+}
+
+export interface WishlistResponse {
+    success: boolean;
+    wishlist: {
+        _id: string;
+        user: string;
+        products: Product[];
+    };
+}
+
+export interface ProductsArrayResponse {
+    success: boolean;
+    count: number;
+    products: Product[];
+}
+
+export interface SingleProductResponse {
+    success: boolean;
+    product: Product;
+}
+
+
+
+export interface WaitList {
+  _id?: string;
+  user: string;
+  products: Product[]; 
 }

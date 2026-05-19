@@ -6,6 +6,9 @@ import { motion } from 'motion/react';
 import { useCartStore } from '@/store/cartstore'; 
 import { useThemeStore } from "@/store/themestore";
 import { Product } from '@/types'; // Adjust this path mapping to match your structure
+import { useProducts } from '@/hooks/useProduct';
+import { useAuthStore } from '@/store/authstore';
+import { useRouter } from 'next/navigation';
 
 interface ProductCardProps {
   product: Product;
@@ -13,19 +16,18 @@ interface ProductCardProps {
 }
 
 export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
-  const { addItem } = useCartStore();
+  const { user } = useAuthStore()
   const theme = useThemeStore((state) => state.theme);
-  const [isAdding, setIsAdding] = useState<boolean>(false);
-
+  const { addProductToCart, loading: isAdding, error } = useProducts();
   const isDark = theme === 'dark';
+  const router = useRouter()
 
   const handleAddToCart = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setIsAdding(true);
+    if (!user) return router.push('/auth'); 
+
     
-    // Simulating async state change for visual UX interaction feedback loop
-    await addItem(product.id, 1);
-    setTimeout(() => setIsAdding(false), 1000);
+    await addProductToCart(product._id, 1);
   };
 
   return (
@@ -33,7 +35,7 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="group cursor-pointer flex flex-col h-full"
-      onClick={() => onViewDetails(product.id)}
+      onClick={() => onViewDetails(product._id)}
     >
       {/* Optimized Media Matrix Wrapper */}
       <div className={`relative aspect-4/5 mb-4 overflow-hidden border transition-colors duration-500 rounded-2xl ${
@@ -51,6 +53,13 @@ export const ProductCard = ({ product, onViewDetails }: ProductCardProps) => {
         />
         
         {/* Dynamic Contextual Quick Add Trigger Element */}
+        {error && (
+          <div className={`absolute inset-0 flex items-center justify-center bg-red-500/80 text-white text-sm font-bold rounded-2xl z-20 p-4 text-center ${
+            isDark ? 'bg-red-600/90' : 'bg-red-500/80'
+          }`}>
+            {error}
+          </div>
+        )}
         <button 
           onClick={handleAddToCart}
           disabled={isAdding}

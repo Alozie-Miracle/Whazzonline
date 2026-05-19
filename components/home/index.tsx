@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowRight, Search } from 'lucide-react';
 import { ProductCard } from '@/components/home/productcard';
 import { useThemeStore } from "@/store/themestore";
-import { MOCK_PRODUCTS } from '@/lib/constant';
+import { useProducts } from '@/hooks/useProduct';
 
 const Index = () => {
   const router = useRouter();
@@ -16,11 +16,12 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const isDark = theme === 'dark';
+  const { clearError, error, fetchAllProducts, loading, products } = useProducts()
 
   // Extract unique categories from static matrix cleanly
-  const categories = ['All', ...Array.from(new Set(MOCK_PRODUCTS.map(p => p.category)))];
+  const categories = ['All', ...Array.from(new Set(products.map(p => p.category)))];
 
-  const filteredProducts = MOCK_PRODUCTS.filter(p => {
+  const filteredProducts = products.filter(p => {
     const matchesCategory = filter === 'All' || p.category === filter;
     const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
                           p.description.toLowerCase().includes(searchQuery.toLowerCase());
@@ -31,8 +32,60 @@ const Index = () => {
     document.getElementById('products-grid')?.scrollIntoView({ behavior: 'smooth' });
   };
 
+
+
+  useEffect(() => {
+    fetchAllProducts();
+  }, [fetchAllProducts])
+
+  if (loading) {
+    return (
+      <div className={`min-h-[80vh] flex flex-col items-center justify-center p-4 ${
+        isDark ? "bg-[#121212]" : "bg-[#FAF9F6]"
+      } min-h-screen transition-colors duration-500`}>
+        <div className={`w-16 h-16 border rounded-full flex items-center justify-center mx-auto mb-4 ${
+          isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-white border-[#E5E5E1]'  
+        }`}>
+          <svg className="animate-spin h-6 w-6 text-gray-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+          </svg>
+        </div>
+        <p className={`text-sm font-serif italic transition-colors ${
+          isDark ? 'text-white' : 'text-[#1A1A1A]'
+        }`}>
+          Loading products...
+        </p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`min-h-[80vh] flex flex-col items-center justify-center p-4 ${
+        isDark ? "bg-[#121212]" : "bg-[#FAF9F6]"  
+      } min-h-screen transition-colors duration-500`}>
+        <div className={`w-16 h-16 border rounded-full flex items-center justify-center mx-auto mb-4 ${
+          isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-white border-[#E5E5E1]'
+        }`}>
+          <Search className={`w-6 h-6 ${isDark ? 'text-gray-600' : 'text-gray-300'}`} />
+        </div>
+        <div className="text-center">
+          <h3 className={`text-lg font-serif italic transition-colors ${
+            isDark ? 'text-white' : 'text-[#1A1A1A]'
+          }`}>
+            Failed to load products
+          </h3>
+          <p className="text-[10px] uppercase tracking-widest text-gray-400 mt-2">
+            {error}
+          </p>
+        </div>
+        </div>
+    );
+  }
+
   return (
-    <div className="space-y-24 lg:pt-5  pb-32 transition-colors duration-500">
+    <div className="space-y-24 lg:pt-5 pb-32 transition-colors duration-500">
       {/* Hero Section Card Node */}
       <section className={`relative h-150 lg:rounded-[3rem] overflow-hidden border transition-colors duration-500 ${
         isDark ? 'bg-[#1A1A1A] border-[#333333]' : 'bg-white border-[#E5E5E1]'
@@ -181,7 +234,7 @@ const Index = () => {
               {filteredProducts.length > 0 ? (
                 filteredProducts.map((product) => (
                   <motion.div
-                    key={product.id}
+                    key={product._id}
                     layout
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

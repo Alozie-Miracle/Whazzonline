@@ -48,7 +48,7 @@ export const Checkout = () => {
 
   // Derive cart items coupled with production specifications
   const cartProducts = items.map(item => {
-    const product = MOCK_PRODUCTS.find(p => p.id === item.productId);
+    const product = MOCK_PRODUCTS.find(p => p._id === item._id);
     return product ? { ...product, quantity: item.quantity } : null;
   }).filter((item): item is Product & { quantity: number } => item !== null);
 
@@ -287,7 +287,7 @@ export const Checkout = () => {
                     <h3 className={`text-[10px] font-bold uppercase tracking-[0.2em] mb-6 border-b pb-4 opacity-40 transition-colors ${isDark ? 'border-[#333333] text-white' : 'border-[#E5E5E1]'}`}>Object Summary</h3>
                     <div className="space-y-6">
                         {cartProducts.map((item) => (
-                        <div key={item.id} className="flex gap-6">
+                        <div key={item._id} className="flex gap-6">
                             <div className={`relative w-20 h-20 border shrink-0 overflow-hidden grayscale-[0.2] rounded-full ${isDark ? 'bg-[#121212] border-[#333333]' : 'bg-white border-[#E5E5E1]'}`}>
                                 <Image 
                                     src={item.imageUrl} 

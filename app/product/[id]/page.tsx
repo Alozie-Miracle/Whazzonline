@@ -14,9 +14,9 @@ const page = () => {
       } min-h-screen transition-colors duration-500`}
     >
 
-        <div className='w-full min-h-screen max-w-7xl mx-auto'>
-            <ProductDetails />
-        </div>
+      <div className='w-full min-h-screen max-w-7xl mx-auto px-5'>
+          <ProductDetails />
+      </div>
     </div>
   )
 }

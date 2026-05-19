@@ -46,7 +46,7 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
   const isDark = theme === 'dark';
 
   return (
-    <nav className={`sticky top-0 z-50 backdrop-blur-md transition-colors duration-500 border-b ${
+    <nav className={`sticky top-0 px-2 z-50 backdrop-blur-md transition-colors duration-500 border-b ${
       isDark 
         ? 'bg-[#121212]/95 border-[#333333]' 
         : 'bg-[#FAF9F6]/90 border-[#E5E5E1]'
@@ -89,7 +89,7 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
                 </Link>
               </>
             )}
-            {profile?.email === 'miracleoliver8@gmail.com' && (
+            {profile?.role === 'admin' && (
               <Link href="/admin" className={`text-[10px] font-bold uppercase tracking-[0.2em] hover:opacity-60 transition-all ${
                 isDark ? 'text-white/80' : 'text-[#1A1A1A]'
               }`}>
@@ -189,7 +189,7 @@ export const Navbar = ({ onCartOpen }: NavbarProps) => {
               isDark ? 'bg-[#121212] border-[#333333]' : 'bg-[#FAF9F6] border-[#E5E5E1]'
             }`}
           >
-            <div className="px-3 py-10 flex flex-col justify-between h-full max-w-md mx-auto">
+            <div className="px-3 py-10 flex flex-col justify-between h-full lg:max-w-md mx-auto">
               <div className="space-y-5">
                 <p className="text-[10px] font-mono tracking-widest text-gray-400 uppercase">Navigation</p>
                 <Link href="/" onClick={() => setIsMenuOpen(false)} className={`block text-sm  uppercase tracking-[0.15em] hover:opacity-60 transition-all ${

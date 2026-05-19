@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import ContainerLayout from "@/components/general/container";
+import { Toaster } from 'react-hot-toast';
 
 // Configure your fonts and assign them to CSS variables
 const inter = Inter({
@@ -36,6 +37,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <ContainerLayout>
+          <Toaster position="top-right" />
           {children}
         </ContainerLayout>
       </body>
